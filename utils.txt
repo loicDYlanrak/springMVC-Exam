@@ -1,0 +1,3 @@
+-- lancement du spring mvc :
+
+mvn clean compile jetty:run
