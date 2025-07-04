@@ -26,7 +26,6 @@
 </head>
 <body>
 
-    <div class="container mt-4">
            <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
             <a class="navbar-brand" href="<c:url value='/'/>">Bibliothèque</a>
@@ -66,6 +65,8 @@
             </div>
         </div> 
     </nav>
+    <div class="container mt-4">
+
         <h2>Inscription d'un nouvel adherent</h2>
 
         <c:if test="${not empty message}">
@@ -111,7 +112,7 @@
                                 <select class="form-select" id="idTypeAdherent" name="idTypeAdherent" required>
                                     <option value="">-- Selectionnez un type --</option>
                                     <c:forEach items="${typesAdherent}" var="type">
-                                        <option value="${type.idTypeAdherent}">${type.libelle}</option>
+                                        <option value="${type.id_type_adherent}">${type.libelle}</option>
                                     </c:forEach>
                                 </select>
                             </div>
