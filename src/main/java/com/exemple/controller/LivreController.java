@@ -1,18 +1,22 @@
 package com.exemple.controller;
 
-import com.exemple.model.Livre;
-import com.exemple.service.LivreService;
+import com.exemple.model.*;
+import com.exemple.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping("/livres")
+@RequestMapping("/livre")
 public class LivreController {
+    
     @Autowired
     private LivreService livreService;
-
+    
+    @Autowired
+    private PretService pretService;
+    
     @GetMapping
     public String listLivres(Model model) {
         model.addAttribute("livres", livreService.getAllLivres());
@@ -41,5 +45,23 @@ public class LivreController {
     public String deleteLivre(@PathVariable Integer id) {
         livreService.deleteLivre(id);
         return "redirect:/livres";
+    }
+
+    @GetMapping("/pret/{idLivre}")
+    public String showPretForm(@PathVariable int idLivre, Model model) {
+        model.addAttribute("idLivre", idLivre);
+        return "livre/pret";
+    }
+
+    @PostMapping("/pret")
+    public String processPret(
+            @RequestParam("id_exemplaire") int idExemplaire,
+            @RequestParam("id_adherent") int idAdherent,
+            Model model) {
+        
+        String result = pretService.emprunterExemplaire(idExemplaire, idAdherent);
+        model.addAttribute("message", result);
+        
+        return "redirect:/";
     }
 }

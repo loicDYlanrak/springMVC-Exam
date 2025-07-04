@@ -2,6 +2,7 @@ package com.exemple.service;
 
 import com.exemple.model.Exemplaire;
 import com.exemple.repository.ExemplaireRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +12,7 @@ import java.util.List;
 public class ExemplaireService {
     @Autowired
     private ExemplaireRepository exemplaireRepository;
-
+         
     public List<Exemplaire> getAllExemplaires() {
         return exemplaireRepository.findAll();
     }
@@ -27,4 +28,6 @@ public class ExemplaireService {
     public void deleteExemplaire(Integer id) {
         exemplaireRepository.deleteById(id);
     }
-}
+
+    
+} 

@@ -1,7 +1,8 @@
 package com.exemple.model;
 
 import javax.persistence.*;
-import java.util.Date;
+
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "Abonnement")
@@ -15,14 +16,11 @@ public class Abonnement {
     private Adherent adherent;
     
     @Column(nullable = false, name = "date_debut")
-    @Temporal(TemporalType.DATE)
-    private Date dateDebut;
+    private LocalDate dateDebut;
     
     @Column(nullable = false, name = "date_fin")
-    @Temporal(TemporalType.DATE)
-    private Date dateFin;
+    private LocalDate dateFin;
 
-    // Getters and Setters
     public Integer getId_abonnement() {
         return id_abonnement;
     }
@@ -39,19 +37,19 @@ public class Abonnement {
         this.adherent = adherent;
     }
 
-    public Date getDateDebut() {
+    public LocalDate getDateDebut() {
         return dateDebut;
     }
 
-    public void setDateDebut(Date dateDebut) {
+    public void setDateDebut(LocalDate dateDebut) {
         this.dateDebut = dateDebut;
     }
 
-    public Date getDateFin() {
+    public LocalDate getDateFin() {
         return dateFin;
     }
 
-    public void setDateFin(Date dateFin) {
+    public void setDateFin(LocalDate dateFin) {
         this.dateFin = dateFin;
     }
 }
