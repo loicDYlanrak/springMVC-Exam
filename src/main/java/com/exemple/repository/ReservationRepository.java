@@ -23,7 +23,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Intege
     void deleteByExemplaireAndAdherent(Exemplaire exemplaire, Adherent adherent);
     boolean existsByExemplaire(Exemplaire exemplaire);
 
-    boolean existsByAdherentAndExemplaire(int idAdherent, int idExemplaire);
+    boolean existsByAdherentAndExemplaire(Adherent adherent, Exemplaire exemplaire);
 
     @Query("SELECT r FROM Reservation r WHERE r.exemplaire.id_exemplaire = :idExemplaire ORDER BY r.date_reservation DESC")
     List<Reservation> findByExemplaireIdOrderByDateReservationDesc(@Param("idExemplaire") int idExemplaire);

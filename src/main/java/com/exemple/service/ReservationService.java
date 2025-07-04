@@ -9,8 +9,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.exemple.model.*;
-import com.exemple.repository.*;
+import com.exemple.model.Adherent;
+import com.exemple.model.Exemplaire;
+import com.exemple.model.Reservation;
+import com.exemple.repository.AbonnementRepository;
+import com.exemple.repository.AdherentRepository;
+import com.exemple.repository.ExemplaireRepository;
+import com.exemple.repository.PenaliteRepository;
+import com.exemple.repository.ReservationRepository;
 
 @Service
 public class ReservationService {
@@ -37,14 +43,13 @@ public class ReservationService {
     
     @Transactional
     public String reserverExemplaire(int idExemplaire, int idAdherent, LocalDateTime dateReservation) {
-        // Vérifications
+        // Récupération des entités complètes
         Adherent adherent = adherentRepository.findById(idAdherent)
                 .orElseThrow(() -> new RuntimeException("Adhérent non trouvé"));
         
         Exemplaire exemplaire = exemplaireRepository.findById(idExemplaire)
                 .orElseThrow(() -> new RuntimeException("Exemplaire non trouvé"));
-        
-        // Vérification adhérent actif
+            // Vérification adhérent actif
         if (abonnementRepository.findActiveByAdherent(idAdherent, LocalDate.now()).isEmpty()) {
             return "Adhésion expirée";
         }
@@ -53,12 +58,11 @@ public class ReservationService {
         if (!penaliteRepository.findActivePenalitesByAdherent(idAdherent).isEmpty()) {
             return "Vous ne pouvez pas réserver à cause d'une pénalité active";
         }
-        
-        // Vérification réservation existante
-        if (reservationRepository.existsByAdherentAndExemplaire(idAdherent, idExemplaire)) {
+            
+        // Vérification réservation existante (utilise maintenant les objets)
+        if (reservationRepository.existsByAdherentAndExemplaire(adherent, exemplaire)) {
             return "Vous avez déjà une réservation active pour ce livre";
         }
-        
         if (LocalDate.now().getYear() - adherent.getDateNaissance().getYear() < exemplaire.getLivre().getAge_minimum()) {
             return "L'âge de l'adhérent ne correspond pas à l'âge minimum requis";
         }
