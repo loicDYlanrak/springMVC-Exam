@@ -22,7 +22,6 @@ public class Abonnement {
     @Temporal(TemporalType.DATE)
     private Date dateFin;
 
-    // Getters and Setters
     public Integer getId_abonnement() {
         return id_abonnement;
     }

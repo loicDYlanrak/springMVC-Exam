@@ -27,24 +27,26 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
-            <a class="navbar-brand" href="/">Bibliothèque</a>
+            <a class="navbar-brand" href="<c:url value='/'/>">Bibliothèque</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="/">Accueil</a>
+                        <a class="nav-link" href="<c:url value='/'/>">Accueil</a>
                     </li>
                 </ul>
                 <div class="d-flex">
                     <c:choose>
                         <c:when test="${not empty sessionScope.adherent or not empty sessionScope.bibliothecaire}">
-                            <a href="/logout" class="btn btn-outline-light">Déconnexion</a>
+                            <div>Vous etes actuellement connecter en temps que bibliothecaire</div>
+                            <a href="<c:url value='/logout'/>" class="btn btn-outline-light">Déconnexion</a>
                         </c:when>
+
                         <c:otherwise>
-                            <a href="/login" class="btn btn-outline-light me-2">Connexion</a>
-                            <a href="/inscription" class="btn btn-primary">Inscription</a>
+                            <a href="<c:url value='/login'/>" class="btn btn-outline-light me-2">Connexion Adherent</a>
+                            <a href="<c:url value='/login'/>" class="btn btn-primary">Connexion Bibliothècaire</a>
                         </c:otherwise>
                     </c:choose>
                 </div>
@@ -54,7 +56,7 @@
 
     <div class="container mt-4">
         <div class="search-box">
-            <form action="/" method="get" class="d-flex">
+            <form action="<c:url value='/'/>" method="get" class="d-flex">
                 <input type="text" name="search" class="form-control me-2" placeholder="Rechercher un livre..." value="${param.search}">
                 <button type="submit" class="btn btn-primary">Rechercher</button>
             </form>
@@ -62,9 +64,9 @@
 
         <div class="row">
             <c:forEach items="${livres}" var="livre">
-                <div class="col-md-4">
+                <br>
+                <div class="col-md-4 mb-4">
                     <div class="card book-card">
-                        <img src="https://via.placeholder.com/300x200?text=${livre.titre}" class="card-img-top book-img" alt="${livre.titre}">
                         <div class="card-body">
                             <h5 class="card-title">${livre.titre}</h5>
                             <p class="card-text">Auteur: ${livre.auteur}</p>
@@ -72,6 +74,19 @@
                             <c:if test="${not empty livre.annee_publication}">
                                 <p class="card-text">Année: ${livre.annee_publication}</p>
                             </c:if>
+
+                        </div>
+                        <div class="card-footer">
+                            <c:choose>
+                                <c:when test="${not empty sessionScope.bibliothecaire}">
+                                    <a href="<c:url value='/livre/pret/${livre.id_livre}'/>" class="btn btn-primary">Pret</a>
+                                    <a href="<c:url value='/livre/reserver/${livre.id_livre}'/>" class="btn btn-secondary">Reserver</a>
+                                    <a href="<c:url value='/livre/detail/${livre.id_livre}'/>" class="btn btn-secondary">Voir Details</a>
+                                </c:when>
+                                <c:when test="${not empty sessionScope.adherent}">
+                                    <a href="<c:url value='/livre/reserver/${livre.id_livre}'/>" class="btn btn-secondary">Reserver</a>
+                                </c:when>
+                            </c:choose>
                         </div>
                     </div>
                 </div>

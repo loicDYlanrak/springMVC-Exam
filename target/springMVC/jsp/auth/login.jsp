@@ -35,7 +35,7 @@
                         
                         <div class="tab-content mt-3" id="loginTabsContent">
                             <div class="tab-pane fade show active" id="adherent" role="tabpanel">
-                                <form action="/login/adherent" method="post">
+                                <form action="<c:url value='/login/adherent'/>" method="post">
                                     <div class="mb-3">
                                         <label for="email" class="form-label">Email</label>
                                         <input type="email" class="form-control" id="email" name="email" required>
@@ -49,7 +49,7 @@
                             </div>
                             
                             <div class="tab-pane fade" id="bibliothecaire" role="tabpanel">
-                                <form action="/login/bibliothecaire" method="post">
+                                <form action="<c:url value='/login/bibliothecaire'/>" method="post">
                                     <div class="mb-3">
                                         <label for="nom" class="form-label">Nom</label>
                                         <input type="text" class="form-control" id="nom" name="nom" required>
@@ -64,7 +64,7 @@
                         </div>
                         
                         <div class="mt-3 text-center">
-                            <p>Pas encore inscrit? <a href="/inscription">Créer un compte</a></p>
+                            <p>Pas encore inscrit? <a href="<c:url value='/inscription'/>">Créer un compte</a></p>
                         </div>
                     </div>
                 </div>

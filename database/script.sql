@@ -1,7 +1,7 @@
 CREATE DATABASE IF NOT EXISTS biblio;
 USE biblio;
 
-CREATE TABLE Biliothecaire (
+CREATE TABLE Bibliothecaire (
     id_biblio INT PRIMARY KEY AUTO_INCREMENT,
     nom VARCHAR(100),
     pwd VARCHAR(100)
@@ -27,13 +27,6 @@ CREATE TABLE Adherent (
     FOREIGN KEY (id_type_adherent) REFERENCES TypeAdherent(id_type_adherent)
 );
 
-CREATE TABLE Abonnement (
-    id_abonnement INT PRIMARY KEY AUTO_INCREMENT,
-    id_adherent INT NOT NULL,
-    date_debut DATE NOT NULL,
-    date_fin DATE NOT NULL,
-    FOREIGN KEY (id_adherent) REFERENCES Adherent(id_adherent)
-);
 
 CREATE TABLE Livre (
     id_livre INT PRIMARY KEY AUTO_INCREMENT,
@@ -49,9 +42,18 @@ CREATE TABLE Exemplaire (
     FOREIGN KEY (id_livre) REFERENCES Livre(id_livre)
 );
 
+CREATE TABLE Abonnement (
+    id_abonnement INT PRIMARY KEY AUTO_INCREMENT,
+    id_adherent INT NOT NULL,
+    date_debut DATE NOT NULL,
+    date_fin DATE NOT NULL,
+    FOREIGN KEY (id_adherent) REFERENCES Adherent(id_adherent)
+);
+
+ 
 CREATE TABLE EtatExemplaire ( 
     id_etat INT PRIMARY KEY AUTO_INCREMENT,
-    libelle VARCHAR(100)
+    libelle VARCHAR(100) 
 );
 
 CREATE TABLE StatusExemplaire ( 
@@ -61,9 +63,11 @@ CREATE TABLE StatusExemplaire (
     id_etat INT NOT NULL,
     id_biblio INT NULL,
     FOREIGN KEY (id_exemplaire) REFERENCES Exemplaire(id_exemplaire),
-    FOREIGN KEY (id_biblio) REFERENCES Biliothecaire(id_biblio),
+    FOREIGN KEY (id_biblio) REFERENCES Bibliothecaire(id_biblio),
     FOREIGN KEY (id_etat) REFERENCES EtatExemplaire(id_etat)
 );
+
+--disponible / prêté
 
 CREATE TABLE TypePret ( 
     id_type_pret INT PRIMARY KEY AUTO_INCREMENT,
@@ -84,7 +88,6 @@ CREATE TABLE Pret (
 CREATE TABLE Prologement (
     id_prologement INT PRIMARY KEY AUTO_INCREMENT,
     id_pret INT NOT NULL,
-    nbr_jour INT NOT NULL,
     FOREIGN KEY (id_prologement) REFERENCES Pret(id_pret)
 );
 
