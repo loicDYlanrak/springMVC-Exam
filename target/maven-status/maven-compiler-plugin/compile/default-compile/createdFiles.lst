@@ -27,7 +27,6 @@ com\exemple\controller\HomeController.class
 com\exemple\model\Abonnement.class
 com\exemple\service\PretService.class
 com\exemple\model\Reservation.class
-com\exemple\controller\LivreController$PretForm.class
 com\exemple\repository\TypeAdherentRepository.class
 com\exemple\repository\TypePretRepository.class
 com\exemple\service\LivreService.class
@@ -35,7 +34,6 @@ com\exemple\service\AdherentService.class
 com\exemple\service\ReservationService.class
 com\exemple\repository\PretRepository.class
 com\exemple\controller\LivreController.class
-com\exemple\controller\PaiementController.class
 com\exemple\model\TypeAdherent.class
 com\exemple\model\Bibliothecaire.class
 com\exemple\repository\EtatExemplaireRepository.class

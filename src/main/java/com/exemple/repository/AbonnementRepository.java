@@ -2,6 +2,7 @@ package com.exemple.repository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -15,8 +16,8 @@ import com.exemple.model.Adherent;
 public interface AbonnementRepository extends JpaRepository<Abonnement, Integer> {
     
     List<Abonnement> findByAdherent(Adherent adherent);
-    @Query("SELECT a FROM Abonnement a WHERE a.adherent.id_adherent = :idAdherent " +
-       "AND a.date_debut <= :currentDate AND a.date_fin >= :currentDate")
-    Abonnement findActiveByAdherent(@Param("idAdherent") int idAdherent, 
-                               @Param("currentDate") LocalDate currentDate);
+        @Query("SELECT a FROM Abonnement a WHERE a.adherent.id_adherent = :idAdherent " +
+           "AND a.dateDebut <= :currentDate AND a.dateFin >= :currentDate")
+    Optional<Abonnement> findActiveByAdherent(@Param("idAdherent") int idAdherent, 
+                                            @Param("currentDate") LocalDate currentDate);
 }

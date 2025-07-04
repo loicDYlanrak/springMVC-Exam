@@ -22,6 +22,11 @@
             height: 200px;
             object-fit: cover;
         }
+        .text-title {
+    color: white;
+    text-align: center;
+    padding: 7px;
+}
     </style>
 </head>
 <body>
@@ -40,7 +45,7 @@
                 <div class="d-flex">
                     <c:choose>
                         <c:when test="${not empty sessionScope.adherent or not empty sessionScope.bibliothecaire}">
-                            <div>Vous etes actuellement connecter en temps que bibliothecaire</div>
+                            <div class="text-title">Vous etes actuellement connecter en temps que bibliothecaire</div>
                             <a href="<c:url value='/logout'/>" class="btn btn-outline-light">Déconnexion</a>
                         </c:when>
 
@@ -53,7 +58,12 @@
             </div>
         </div>
     </nav>
-
+    <c:if test="${not empty message}">
+        <div class="alert alert-info alert-dismissible fade show mt-3" role="alert">
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    </c:if>
     <div class="container mt-4">
         <div class="search-box">
             <form action="<c:url value='/'/>" method="get" class="d-flex">

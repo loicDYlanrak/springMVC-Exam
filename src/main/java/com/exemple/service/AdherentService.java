@@ -7,10 +7,7 @@ import com.exemple.repository.AdherentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -55,17 +52,6 @@ public class AdherentService {
                 .orElse(null);
     }
     
-    public boolean isAdherentActif(int idAdherent) {
-        Abonnement abonnement = getAbonnement(idAdherent);
-        if (abonnement == null) {
-            return false;
-        }
 
-        LocalDate aujourdhui = LocalDate.now();
-        Date dateFinUtil = abonnement.getDateFin(); 
-        LocalDate dateFin = dateFinUtil.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-
-        return !dateFin.isBefore(aujourdhui); 
-    }
 
 } 
