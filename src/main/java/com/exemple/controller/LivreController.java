@@ -20,6 +20,9 @@ public class LivreController {
     
     @Autowired
     private PretService pretService;
+        
+    @Autowired
+    private AdherentService adherentService;
 
     @Autowired
     private ExemplaireService exemplaireService;
@@ -107,6 +110,7 @@ public class LivreController {
         Livre livre = livreService.getLivreById(idLivre);
         model.addAttribute("livre", livre);
         model.addAttribute("exemplaires", exemplaireService.getExemplairesByLivreId(idLivre));
+        model.addAttribute("adherents", adherentService.getAllAdherents()); // Ajoutez cette ligne
         return "exemplaires";
     }
 }

@@ -1,9 +1,8 @@
 package com.exemple.service;
 
-import com.exemple.model.Abonnement;
-import com.exemple.model.Adherent;
-import com.exemple.repository.AbonnementRepository;
-import com.exemple.repository.AdherentRepository;
+import com.exemple.model.*;
+import com.exemple.repository.*;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,14 +18,35 @@ public class AdherentService {
     @Autowired
     private AbonnementRepository abonnementRepository;
 
-    public List<Adherent> getAllAdherents() {
-        return adherentRepository.findAll();
+    @Autowired
+    private TypeAdherentRepository typeAdherentRepository;
+
+    public Adherent inscrireAdherent(String nom, String email, String pwd, String dateNaissance, Integer idTypeAdherent) {
+        if (adherentRepository.existsByEmail(email)) {
+            throw new RuntimeException("Cet email est déjà utilisé par un autre adhérent.");
+        }
+
+        TypeAdherent typeAdherent = typeAdherentRepository.findById(idTypeAdherent)
+                .orElseThrow(() -> new RuntimeException("Type d'adhérent non trouvé"));
+
+        Adherent adherent = new Adherent();
+        adherent.setNom(nom);
+        adherent.setEmail(email);
+        adherent.setPwd(pwd);
+        adherent.setDateNaissance(java.sql.Date.valueOf(dateNaissance));
+        adherent.setTypeAdherent(typeAdherent);
+
+        return adherentRepository.save(adherent);
     }
 
     public Adherent getAdherentById(Integer id) {
-        return adherentRepository.findById(id).orElse(null);
+        return adherentRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Aucun adhérent trouvé avec cet identifiant."));
     }
 
+    public List<Adherent> getAllAdherents() {
+        return adherentRepository.findAll();
+    }
     public Adherent saveAdherent(Adherent adherent) {
         return adherentRepository.save(adherent);
     }

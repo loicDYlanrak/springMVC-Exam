@@ -1,5 +1,4 @@
-CREATE DATABASE IF NOT EXISTS biblio;
-USE biblio;
+
 
 CREATE TABLE Bibliothecaire (
     id_biblio INT PRIMARY KEY AUTO_INCREMENT,

@@ -37,5 +37,6 @@ com\exemple\service\ReservationService.class
 com\exemple\repository\PretRepository.class
 com\exemple\controller\LivreController.class
 com\exemple\model\TypeAdherent.class
+com\exemple\repository\StatusExemplaireRepository.class
 com\exemple\model\Bibliothecaire.class
 com\exemple\repository\EtatExemplaireRepository.class

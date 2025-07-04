@@ -3,6 +3,7 @@ C:\RepertoireTravail\springMVC-Exam\src\main\java\com\exemple\service\Exemplaire
 C:\RepertoireTravail\springMVC-Exam\src\main\java\com\exemple\repository\TypePretRepository.java
 C:\RepertoireTravail\springMVC-Exam\src\main\java\com\exemple\controller\HomeController.java
 C:\RepertoireTravail\springMVC-Exam\src\main\java\com\exemple\service\LivreService.java
+C:\RepertoireTravail\springMVC-Exam\src\main\java\com\exemple\repository\StatusExemplaireRepository.java
 C:\RepertoireTravail\springMVC-Exam\src\main\java\com\exemple\model\Exemplaire.java
 C:\RepertoireTravail\springMVC-Exam\src\main\java\com\exemple\model\Abonnement.java
 C:\RepertoireTravail\springMVC-Exam\src\main\java\com\exemple\repository\PretRepository.java
