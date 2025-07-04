@@ -14,7 +14,7 @@ public class ExemplaireService {
     private ExemplaireRepository exemplaireRepository;
          
     public List<Exemplaire> getAllExemplaires() {
-        return exemplaireRepository.findAll();
+        return exemplaireRepository.findAll(); // This will now use the EntityGraph
     }
 
     public Exemplaire getExemplaireById(Integer id) {
@@ -28,6 +28,8 @@ public class ExemplaireService {
     public void deleteExemplaire(Integer id) {
         exemplaireRepository.deleteById(id);
     }
-
     
-} 
+    public List<Exemplaire> getExemplairesByLivreId(Integer livreId) {
+        return exemplaireRepository.findByLivreId(livreId); // This will now use the EntityGraph
+    }
+}

@@ -31,6 +31,9 @@ public class PretService {
     @Autowired
     private TypePretRepository typePretRepository;
 
+    @Autowired
+    private ProlongementRepository prolongementRepository;
+
     @Transactional
     public String emprunterExemplaire(int idExemplaire, int idAdherent) {
         Adherent adherent = adherentRepository.findById(idAdherent)
@@ -78,5 +81,49 @@ public class PretService {
         pretRepository.save(pret);
         
         return "Prêt effectué avec succès.";
+    }
+
+    @Transactional
+    public String retournerExemplaire(int idExemplaire) {
+        Pret pret = pretRepository.findByExemplaireAndDateRetourIsNull(idExemplaire)
+                .orElseThrow(() -> new RuntimeException("Aucun prêt en cours pour cet exemplaire"));
+        
+        LocalDate dateRetour = LocalDate.now();
+        pret.setDate_retour(dateRetour);
+        
+        // Vérification retard
+        LocalDate dateLimite = pret.getDate_pret().plusDays(pret.getAdherent().getTypeAdherent().getDuree_pret());
+        if (dateRetour.isAfter(dateLimite)) {
+            Penalite penalite = new Penalite();
+            penalite.setPret(pret);
+            penaliteRepository.save(penalite);
+            return "Retour enregistré avec pénalité pour retard";
+        }
+        
+        return "Retour enregistré";
+    }
+
+    @Transactional
+    public String prolongerPret(int idExemplaire) {
+        Pret pret = pretRepository.findByExemplaireAndDateRetourIsNull(idExemplaire)
+                .orElseThrow(() -> new RuntimeException("Aucun prêt en cours pour cet exemplaire"));
+        
+        // Vérification si déjà prolongé
+        if (prolongementRepository.existsByPret(pret.getId_pret())) {
+            return "Ce prêt a déjà été prolongé";
+        }
+        
+        // Vérification limite prolongement
+        TypeAdherent type = pret.getAdherent().getTypeAdherent();
+        long nbProlongements = prolongementRepository.countByAdherent(pret.getAdherent().getId_adherent());
+        if (nbProlongements >= type.getNb_jour_max_prologement()) {
+            return "Limite de prolongement atteinte pour cet adhérent";
+        }
+        
+        Prolongement prolongement = new Prolongement();
+        prolongement.setPret(pret);
+        prolongementRepository.save(prolongement);
+        
+        return "Prolongement effectué";
     }
 }

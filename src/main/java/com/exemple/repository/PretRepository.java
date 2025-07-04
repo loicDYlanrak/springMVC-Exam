@@ -1,6 +1,7 @@
 package com.exemple.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -20,7 +21,7 @@ public interface PretRepository extends JpaRepository<Pret, Integer> {
     int countByAdherentAndDateRetourIsNull(@Param("adherent") Adherent adherent);
 
     @Query("SELECT p FROM Pret p WHERE p.exemplaire.id_exemplaire = :idExemplaire AND p.date_retour IS NULL")
-    Pret findByExemplaireIdAndDate_RetourIsNull(@Param("idExemplaire") int idExemplaire);
+    Optional<Pret> findByExemplaireAndDateRetourIsNull(@Param("idExemplaire") int idExemplaire);
         
     @Query("SELECT CASE WHEN COUNT(p) > 0 THEN true ELSE false END " +
         "FROM Prolongement p WHERE p.pret = :pret")
