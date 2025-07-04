@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 @RequestMapping("/bibliothecaires")
 public class BibliothecaireController {
-    @Autowired
+    @Autowired 
     private BibliothecaireService bibliothecaireService;
 
     @GetMapping

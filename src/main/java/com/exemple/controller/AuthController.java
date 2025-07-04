@@ -22,7 +22,7 @@ public class AuthController {
     private BibliothecaireService bibliothecaireService;
 
     @GetMapping("/login")
-    public String showLoginForm() {
+    public String showLoginForm() { 
         return "auth/login";
     }
 

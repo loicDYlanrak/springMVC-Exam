@@ -21,6 +21,12 @@ public class PretService {
     
     @Autowired
     private ExemplaireRepository exemplaireRepository;
+
+    @Autowired
+    private EtatExemplaireRepository etatExemplaireRepository;
+
+    @Autowired
+    private StatusExemplaireRepository statusExemplaireRepository;
     
     @Autowired
     private AbonnementRepository abonnementRepository;
@@ -32,7 +38,7 @@ public class PretService {
     private TypePretRepository typePretRepository;
 
     @Autowired
-    private ProlongementRepository prolongementRepository;
+    private ProlongementRepository prolongementRepository; 
 
     @Transactional
     public String emprunterExemplaire(int idExemplaire, int idAdherent) {
@@ -80,6 +86,23 @@ public class PretService {
         
         pretRepository.save(pret);
         
+        
+        StatusExemplaire status = new StatusExemplaire();
+        status.setExemplaire(exemplaire);
+        status.setDate_changement(LocalDate.now());
+        
+        // On suppose que l'état "prete" a l'id 2 (selon votre INSERT)
+        EtatExemplaire etat = etatExemplaireRepository.findByLibelle("prete")
+                .orElseThrow(() -> new RuntimeException("État exemplaire non trouvé"));
+        status.setEtat(etat);
+        
+        // On utilise l'ID 1 pour le bibliothécaire comme spécifié
+        Bibliothecaire biblio = new Bibliothecaire();
+        biblio.setId_biblio(1);
+        status.setBibliothecaire(biblio);
+        
+        statusExemplaireRepository.save(status);
+
         return "Prêt effectué avec succès.";
     }
 
@@ -90,6 +113,20 @@ public class PretService {
         
         LocalDate dateRetour = LocalDate.now();
         pret.setDate_retour(dateRetour);
+
+        StatusExemplaire status = new StatusExemplaire();
+        status.setExemplaire(pret.getExemplaire());
+        status.setDate_changement(dateRetour);
+        
+        EtatExemplaire etat = etatExemplaireRepository.findByLibelle("disponible")
+                .orElseThrow(() -> new RuntimeException("État exemplaire non trouvé"));
+        status.setEtat(etat);
+        
+        Bibliothecaire biblio = new Bibliothecaire();
+        biblio.setId_biblio(1);
+        status.setBibliothecaire(biblio);
+        
+        statusExemplaireRepository.save(status);
         
         // Vérification retard
         LocalDate dateLimite = pret.getDate_pret().plusDays(pret.getAdherent().getTypeAdherent().getDuree_pret());

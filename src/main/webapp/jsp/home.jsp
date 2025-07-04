@@ -30,7 +30,7 @@
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
             <a class="navbar-brand" href="<c:url value='/'/>">Bibliothèque</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -41,6 +41,14 @@
                     <li class="nav-item">
                         <a class="nav-link" href="<c:url value='/'/>">Accueil</a>
                     </li>
+                    <c:if test="${not empty sessionScope.bibliothecaire}">
+                        <li class="nav-item">
+                            <a class="nav-link" href="<c:url value='/inscription/form'/>">Inscrire Adhérent</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="<c:url value='/inscription/form'/>">Entrer Abonnement</a>
+                        </li>
+                    </c:if>
                 </ul>
                 <div class="d-flex">
                     <c:choose>
@@ -61,7 +69,6 @@
             </div>
         </div>
     </nav>
-
     <c:if test="${not empty message}">
         <div class="alert alert-info alert-dismissible fade show mt-3" role="alert">
             ${message}
