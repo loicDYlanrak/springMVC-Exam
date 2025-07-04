@@ -38,6 +38,7 @@ public class InscriptionController {
         }
 
         List<TypeAdherent> typesAdherent = typeAdherentService.getAllTypeAdherents();
+        model.addAttribute("adherents", adherentService.getAllAdherents());
         model.addAttribute("typesAdherent", typesAdherent);
         return "/inscription/form";
     }

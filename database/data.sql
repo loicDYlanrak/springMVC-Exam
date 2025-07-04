@@ -224,3 +224,6 @@ INSERT INTO StatusExemplaire (id_exemplaire, date_changement, id_etat, id_biblio
 (118, '2023-01-15', 1, 1),
 (119, '2023-01-15', 1, 1),
 (120, '2023-01-15', 1, 1);
+
+INSERT INTO typePret (libelle) VALUES ('Lecture a domicile');
+INSERT INTO typePret (libelle) VALUES ('Lecture sur place');

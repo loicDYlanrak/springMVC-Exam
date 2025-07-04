@@ -7,6 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+
+import javax.transaction.Transactional;
 
 @Service
 public class ExemplaireService {
@@ -19,6 +22,18 @@ public class ExemplaireService {
 
     public Exemplaire getExemplaireById(Integer id) {
         return exemplaireRepository.findById(id).orElse(null);
+    }
+
+    public Exemplaire getExemplaireWithStatus(int idExemplaire) {
+        Optional<Exemplaire> exemplaire = exemplaireRepository.findByIdWithStatus(idExemplaire);
+        
+        return exemplaire.get();
+    }
+
+    @Transactional
+    public Exemplaire getExemplaireWithInitializedStatus(int idExemplaire) {
+        return exemplaireRepository.findByIdWithFullDetails(idExemplaire)
+                .orElseThrow(() -> new RuntimeException("Exemplaire non trouvé"));
     }
 
     public Exemplaire saveExemplaire(Exemplaire exemplaire) {

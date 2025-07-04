@@ -1,6 +1,10 @@
 package com.exemple.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.exemple.model.Adherent;
@@ -20,4 +24,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Intege
     boolean existsByExemplaire(Exemplaire exemplaire);
 
     boolean existsByAdherentAndExemplaire(int idAdherent, int idExemplaire);
+
+    @Query("SELECT r FROM Reservation r WHERE r.exemplaire.id_exemplaire = :idExemplaire ORDER BY r.date_reservation DESC")
+    List<Reservation> findByExemplaireIdOrderByDateReservationDesc(@Param("idExemplaire") int idExemplaire);
 }

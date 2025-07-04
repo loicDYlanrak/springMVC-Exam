@@ -20,7 +20,7 @@ public class PretService {
     private AdherentRepository adherentRepository;
     
     @Autowired
-    private ExemplaireRepository exemplaireRepository;
+    private ExemplaireRepository exemplaireRepository; 
 
     @Autowired
     private EtatExemplaireRepository etatExemplaireRepository;
@@ -40,8 +40,12 @@ public class PretService {
     @Autowired
     private ProlongementRepository prolongementRepository; 
 
+    public List<Pret> getHistoriquePretsByExemplaire(int idExemplaire) {
+        return pretRepository.findByExemplaireIdOrderByDatePretDesc(idExemplaire);
+    }
+
     @Transactional
-    public String emprunterExemplaire(int idExemplaire, int idAdherent) {
+    public String emprunterExemplaire(int idExemplaire, int idAdherent, LocalDate datePret) {
         Adherent adherent = adherentRepository.findById(idAdherent)
                 .orElseThrow(() -> new RuntimeException("Adhérent non trouvé"));
         
@@ -54,7 +58,7 @@ public class PretService {
         }
         
         List<Penalite> penalites = penaliteRepository.findActivePenalitesByAdherent(idAdherent);
-        if (!penalites.isEmpty()) {
+        if (!penalites.isEmpty()) { 
             return "Pénalités en cours, prêt impossible.";
         }
         
@@ -78,7 +82,7 @@ public class PretService {
         Pret pret = new Pret();
         pret.setExemplaire(exemplaire);
         pret.setAdherent(adherent);
-        pret.setDate_pret(LocalDate.now());
+        pret.setDate_pret(datePret);
         
         TypePret typePret = typePretRepository.findByLibelle("Lecture a domicile")
                 .orElseThrow(() -> new RuntimeException("Type de prêt non trouvé"));
@@ -89,7 +93,7 @@ public class PretService {
         
         StatusExemplaire status = new StatusExemplaire();
         status.setExemplaire(exemplaire);
-        status.setDate_changement(LocalDate.now());
+        status.setDate_changement(datePret);
         
         // On suppose que l'état "prete" a l'id 2 (selon votre INSERT)
         EtatExemplaire etat = etatExemplaireRepository.findByLibelle("prete")
@@ -107,11 +111,10 @@ public class PretService {
     }
 
     @Transactional
-    public String retournerExemplaire(int idExemplaire) {
+    public String retournerExemplaire(int idExemplaire, LocalDate dateRetour) {
         Pret pret = pretRepository.findByExemplaireAndDateRetourIsNull(idExemplaire)
                 .orElseThrow(() -> new RuntimeException("Aucun prêt en cours pour cet exemplaire"));
         
-        LocalDate dateRetour = LocalDate.now();
         pret.setDate_retour(dateRetour);
 
         StatusExemplaire status = new StatusExemplaire();

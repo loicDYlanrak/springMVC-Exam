@@ -49,14 +49,18 @@ public class Exemplaire {
 
     // Getter for statusExemplaires
     public List<StatusExemplaire> getStatusExemplaires() {
-        return statusExemplaires;
+        return statusExemplaires; 
     }
     
     // Get current status (convenience method)
     public StatusExemplaire getCurrentStatus() {
         if (statusExemplaires == null || statusExemplaires.isEmpty()) {
-            return null;
+            StatusExemplaire defaultStatus = new StatusExemplaire();
+            EtatExemplaire defaultEtat = new EtatExemplaire();
+            defaultEtat.setLibelle("inconnu");
+            defaultStatus.setEtat(defaultEtat);
+            return defaultStatus;
         }
-        return statusExemplaires.get(0); // Because we ordered by date descending
+        return statusExemplaires.get(0); // Le premier élément est le plus récent grâce au @OrderBy
     }
 }

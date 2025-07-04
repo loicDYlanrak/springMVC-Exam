@@ -69,9 +69,9 @@
             </div>
         </div>
     </nav>
-    <c:if test="${not empty message}">
+    <c:if test="${not empty param.message}">
         <div class="alert alert-info alert-dismissible fade show mt-3" role="alert">
-            ${message}
+            ${param.message}
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     </c:if>

@@ -130,8 +130,15 @@
                     <div class="card-body">
                         <form action="<c:url value='/inscription/abonnement'/>" method="post">
                             <div class="mb-3">
-                                <label for="idAdherent" class="form-label">ID Adherent</label>
-                                <input type="number" class="form-control" id="idAdherent" name="idAdherent" required>
+                                <label for="modalBiblioAdherentId" class="form-label">Adhérent</label>
+                                <select class="form-select" id="modalBiblioAdherentId" name="idAdherent" required>
+                                    <option value="">-- Sélectionnez un adhérent --</option>
+                                    <c:forEach items="${adherents}" var="adherent">
+                                        <option value="${adherent.id_adherent}">
+                                            ${adherent.nom} (ID: ${adherent.id_adherent})
+                                        </option>
+                                    </c:forEach>
+                                </select>
                             </div>
                             <div class="mb-3">
                                 <label for="dateDebut" class="form-label">Date de debut</label>

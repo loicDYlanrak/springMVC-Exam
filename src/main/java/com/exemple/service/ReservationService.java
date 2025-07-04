@@ -3,6 +3,7 @@ package com.exemple.service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,6 +30,10 @@ public class ReservationService {
         
     @Autowired
     private ReservationRepository reservationRepository;
+    
+    public List<Reservation> getReservationsByExemplaire(int idExemplaire) {
+        return reservationRepository.findByExemplaireIdOrderByDateReservationDesc(idExemplaire);
+    }
     
     @Transactional
     public String reserverExemplaire(int idExemplaire, int idAdherent, LocalDateTime dateReservation) {

@@ -65,13 +65,13 @@
         </div> 
     </nav>
 
-    <c:if test="${not empty message}">
+    </nav>
+    <c:if test="${not empty param.message}">
         <div class="alert alert-info alert-dismissible fade show mt-3" role="alert">
-            ${message}
+            ${param.message}
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     </c:if>
-
     <div class="container mt-4">
         <h2>Exemplaires du livre : ${livre.titre}</h2>
         <div class="table-container">
@@ -87,17 +87,14 @@
                     <c:forEach items="${exemplaires}" var="exemplaire">
                         <tr>
                             <td>${exemplaire.id_exemplaire}</td>
-                            
-                                <td>
-                                    
-                                    <c:if test="${not empty exemplaire.currentStatus}">
-                                        ${exemplaire.currentStatus.etat.libelle}
-                                    </c:if>
-                                </td>
-
+                            <td>
+                                <c:if test="${not empty exemplaire.currentStatus}">
+                                    ${exemplaire.currentStatus.etat.libelle}
+                                </c:if>
+                            </td>
                             <td>
                                 <c:if test="${not empty sessionScope.adherent}">
-                                    <c:if test="${exemplaire.statusExemplaires.stream().anyMatch(s -> s.etat.libelle == 'disponible')}">
+                                    <c:if test="${exemplaire.currentStatus.etat.libelle == 'disponible'}">
                                         <button type="button" class="btn btn-primary reserve-btn" data-bs-toggle="modal" data-bs-target="#reservationModal" 
                                             data-exemplaire-id="${exemplaire.id_exemplaire}">
                                             Réserver
@@ -105,8 +102,22 @@
                                     </c:if>
                                 </c:if>
                                 <c:if test="${not empty sessionScope.bibliothecaire}">
-                                    <a href="<c:url value='/livre/retour/${exemplaire.id_exemplaire}'/>" class="btn btn-warning btn-sm">Retour</a>
-                                    <a href="<c:url value='/livre/prolonger/${exemplaire.id_exemplaire}'/>" class="btn btn-info btn-sm">Prolonger</a>
+                                    <a href="<c:url value='/livre/exemplaire/details/${exemplaire.id_exemplaire}'/>" class="btn btn-info btn-sm">Voir détails</a>
+                                    <c:choose>
+                                        <c:when test="${exemplaire.currentStatus.etat.libelle == 'disponible'}">
+                                            <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#pretModal"
+                                                data-exemplaire-id="${exemplaire.id_exemplaire}">
+                                                Prêter
+                                            </button>
+                                        </c:when>
+                                        <c:when test="${exemplaire.currentStatus.etat.libelle == 'prete'}">
+                                            <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#retourModal"
+                                                data-exemplaire-id="${exemplaire.id_exemplaire}">
+                                                Retour
+                                            </button>
+                                            <a href="<c:url value='/livre/prolonger/${exemplaire.id_exemplaire}'/>" class="btn btn-info btn-sm">Prolonger</a>
+                                        </c:when>
+                                    </c:choose>
                                     <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#bibliothecaireReservationModal"
                                         data-exemplaire-id="${exemplaire.id_exemplaire}">
                                         Réserver
@@ -140,6 +151,31 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
                         <button type="submit" class="btn btn-primary">Confirmer la réservation</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal pour le retour -->
+    <div class="modal fade" id="retourModal" tabindex="-1" aria-labelledby="retourModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="retourModalLabel">Retourner un exemplaire</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="<c:url value='/livre/retour'/>" method="post">
+                    <div class="modal-body">
+                        <input type="hidden" name="id_exemplaire" id="modalRetourExemplaireId">
+                        <div class="mb-3">
+                            <label for="modalRetourDate" class="form-label">Date de retour</label>
+                            <input type="date" class="form-control" id="modalRetourDate" name="date_retour" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                        <button type="submit" class="btn btn-primary">Confirmer le retour</button>
                     </div>
                 </form>
             </div>
@@ -182,6 +218,42 @@
         </div>
     </div>
 
+    <!-- Modal pour le prêt -->
+    <div class="modal fade" id="pretModal" tabindex="-1" aria-labelledby="pretModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="pretModalLabel">Prêter un exemplaire</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="<c:url value='/livre/pret'/>" method="post">
+                    <div class="modal-body">
+                        <input type="hidden" name="id_exemplaire" id="modalPretExemplaireId">
+                        <div class="mb-3">
+                            <label for="modalPretAdherentId" class="form-label">Adhérent</label>
+                            <select class="form-select" id="modalPretAdherentId" name="id_adherent" required>
+                                <option value="">-- Sélectionnez un adhérent --</option>
+                                <c:forEach items="${adherents}" var="adherent">
+                                    <option value="${adherent.id_adherent}">
+                                        ${adherent.nom} (ID: ${adherent.id_adherent})
+                                    </option>
+                                </c:forEach>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="modalPretDate" class="form-label">Date de prêt</label>
+                            <input type="date" class="form-control" id="modalPretDate" name="date_pret" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                        <button type="submit" class="btn btn-primary">Confirmer le prêt</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         // Script pour gérer l'affichage des modals et le transfert des données
@@ -208,6 +280,28 @@
                 });
             }
         });
+  
+        // Modal pour prêt
+        const pretModal = document.getElementById('pretModal');
+        if (pretModal) {
+            pretModal.addEventListener('show.bs.modal', function(event) {
+                const button = event.relatedTarget;
+                const exemplaireId = button.getAttribute('data-exemplaire-id');
+                const modal = this;
+                modal.querySelector('#modalPretExemplaireId').value = exemplaireId;
+            });
+        }
+
+        // Modal pour retour
+        const retourModal = document.getElementById('retourModal');
+        if (retourModal) {
+            retourModal.addEventListener('show.bs.modal', function(event) {
+                const button = event.relatedTarget;
+                const exemplaireId = button.getAttribute('data-exemplaire-id');
+                const modal = this;
+                modal.querySelector('#modalRetourExemplaireId').value = exemplaireId;
+            });
+        }
     </script>
 </body>
 </html>

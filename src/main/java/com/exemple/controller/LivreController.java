@@ -3,8 +3,11 @@ package com.exemple.controller;
 import com.exemple.model.*;
 import com.exemple.service.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
@@ -18,7 +21,7 @@ public class LivreController {
     @Autowired
     private LivreService livreService;
     
-    @Autowired
+    @Autowired 
     private PretService pretService;
         
     @Autowired
@@ -71,18 +74,24 @@ public class LivreController {
     public String processPret(
             @RequestParam("id_exemplaire") int idExemplaire,
             @RequestParam("id_adherent") int idAdherent,
+            @RequestParam("date_pret") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate datePret,
             Model model) {
         
-        String result = pretService.emprunterExemplaire(idExemplaire, idAdherent);
+        String result = pretService.emprunterExemplaire(idExemplaire, idAdherent, datePret);
         model.addAttribute("message", result);
         
         return "redirect:/";
     }
 
-    @GetMapping("/retour/{idExemplaire}")
-    public String retournerExemplaire(@PathVariable int idExemplaire, Model model) {
-        String result = pretService.retournerExemplaire(idExemplaire);
+    @PostMapping("/retour")
+    public String retournerExemplaire(
+            @RequestParam("id_exemplaire") int idExemplaire,
+            @RequestParam("date_retour") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dateRetour,
+            Model model) {
+        
+        String result = pretService.retournerExemplaire(idExemplaire, dateRetour);
         model.addAttribute("message", result);
+        
         return "redirect:/";
     }
 
@@ -110,7 +119,22 @@ public class LivreController {
         Livre livre = livreService.getLivreById(idLivre);
         model.addAttribute("livre", livre);
         model.addAttribute("exemplaires", exemplaireService.getExemplairesByLivreId(idLivre));
-        model.addAttribute("adherents", adherentService.getAllAdherents()); // Ajoutez cette ligne
+        model.addAttribute("adherents", adherentService.getAllAdherents());
         return "exemplaires";
+    }
+
+    @GetMapping("/exemplaire/details/{idExemplaire}")
+    public String showExemplaireDetails(@PathVariable int idExemplaire, Model model) {
+        Exemplaire exemplaire = exemplaireService.getExemplaireWithInitializedStatus(idExemplaire);
+        List<Pret> historiquePrets = pretService.getHistoriquePretsByExemplaire(idExemplaire);
+        List<Reservation> reservations = reservationService.getReservationsByExemplaire(idExemplaire);
+        
+        model.addAttribute("exemplaire", exemplaire);
+        model.addAttribute("historiquePrets", historiquePrets);
+        model.addAttribute("reservations", reservations);
+        model.addAttribute("livre", exemplaire.getLivre());
+        model.addAttribute("adherents", adherentService.getAllAdherents());
+        
+        return "livre/detailsExemplaire";
     }
 }

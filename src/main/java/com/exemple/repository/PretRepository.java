@@ -35,4 +35,7 @@ public interface PretRepository extends JpaRepository<Pret, Integer> {
     @Query("SELECT COUNT(p) FROM Pret p WHERE p.adherent.id_adherent = :idAdherent " +
        "AND p.date_retour IS NULL")
     long countActivePretsByAdherent(@Param("idAdherent") int idAdherent);
+
+    @Query("SELECT p FROM Pret p WHERE p.exemplaire.id_exemplaire = :idExemplaire ORDER BY p.date_pret DESC")
+    List<Pret> findByExemplaireIdOrderByDatePretDesc(@Param("idExemplaire") int idExemplaire);
 }
