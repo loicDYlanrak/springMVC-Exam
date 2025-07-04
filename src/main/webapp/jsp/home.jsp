@@ -23,10 +23,10 @@
             object-fit: cover;
         }
         .text-title {
-    color: white;
-    text-align: center;
-    padding: 7px;
-}
+            color: white;
+            text-align: center;
+            padding: 7px;
+        }
     </style>
 </head>
 <body>
@@ -44,26 +44,31 @@
                 </ul>
                 <div class="d-flex">
                     <c:choose>
-                        <c:when test="${not empty sessionScope.adherent or not empty sessionScope.bibliothecaire}">
-                            <div class="text-title">Vous etes actuellement connecter en temps que bibliothecaire</div>
-                            <a href="<c:url value='/logout'/>" class="btn btn-outline-light">Déconnexion</a>
+                        <c:when test="${not empty sessionScope.adherent}">
+                            <div class="text-title">Connecté en tant qu'adhérent</div>
+                            <a href="<c:url value='/logout'/>" class="btn btn-outline-light ms-2">Déconnexion</a>
                         </c:when>
-
+                        <c:when test="${not empty sessionScope.bibliothecaire}">
+                            <div class="text-title">Connecté en tant que bibliothécaire</div>
+                            <a href="<c:url value='/logout'/>" class="btn btn-outline-light ms-2">Déconnexion</a>
+                        </c:when>
                         <c:otherwise>
-                            <a href="<c:url value='/login'/>" class="btn btn-outline-light me-2">Connexion Adherent</a>
-                            <a href="<c:url value='/login'/>" class="btn btn-primary">Connexion Bibliothècaire</a>
+                            <a href="<c:url value='/login'/>" class="btn btn-outline-light me-2">Connexion Adhérent</a>
+                            <a href="<c:url value='/login'/>" class="btn btn-primary">Connexion Bibliothécaire</a>
                         </c:otherwise>
                     </c:choose>
                 </div>
             </div>
         </div>
     </nav>
+
     <c:if test="${not empty message}">
         <div class="alert alert-info alert-dismissible fade show mt-3" role="alert">
             ${message}
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     </c:if>
+
     <div class="container mt-4">
         <div class="search-box">
             <form action="<c:url value='/'/>" method="get" class="d-flex">
@@ -74,7 +79,6 @@
 
         <div class="row">
             <c:forEach items="${livres}" var="livre">
-                <br>
                 <div class="col-md-4 mb-4">
                     <div class="card book-card">
                         <div class="card-body">
@@ -84,19 +88,10 @@
                             <c:if test="${not empty livre.annee_publication}">
                                 <p class="card-text">Année: ${livre.annee_publication}</p>
                             </c:if>
-
                         </div>
                         <div class="card-footer">
-                            <c:choose>
-                                <c:when test="${not empty sessionScope.bibliothecaire}">
-                                    <a href="<c:url value='/livre/pret/${livre.id_livre}'/>" class="btn btn-primary">Pret</a>
-                                    <a href="<c:url value='/livre/reserver/${livre.id_livre}'/>" class="btn btn-secondary">Reserver</a>
-                                    <a href="<c:url value='/livre/detail/${livre.id_livre}'/>" class="btn btn-secondary">Voir Details</a>
-                                </c:when>
-                                <c:when test="${not empty sessionScope.adherent}">
-                                    <a href="<c:url value='/livre/reserver/${livre.id_livre}'/>" class="btn btn-secondary">Reserver</a>
-                                </c:when>
-                            </c:choose>
+                            <a href="<c:url value='/livre/exemplaires/${livre.id_livre}'/>" class="btn btn-primary">Voir les exemplaires</a>
+                            
                         </div>
                     </div>
                 </div>

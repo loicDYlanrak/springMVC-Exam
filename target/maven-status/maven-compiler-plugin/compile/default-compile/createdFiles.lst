@@ -28,9 +28,11 @@ com\exemple\model\Abonnement.class
 com\exemple\service\PretService.class
 com\exemple\model\Reservation.class
 com\exemple\repository\TypeAdherentRepository.class
+com\exemple\repository\ProlongementRepository.class
 com\exemple\repository\TypePretRepository.class
 com\exemple\service\LivreService.class
 com\exemple\service\AdherentService.class
+com\exemple\model\StatusExemplaire.class
 com\exemple\service\ReservationService.class
 com\exemple\repository\PretRepository.class
 com\exemple\controller\LivreController.class

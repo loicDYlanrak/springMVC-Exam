@@ -24,6 +24,7 @@ C:\RepertoireTravail\springMVC-Exam\src\main\java\com\exemple\model\TypeAdherent
 C:\RepertoireTravail\springMVC-Exam\src\main\java\com\exemple\repository\ReservationRepository.java
 C:\RepertoireTravail\springMVC-Exam\src\main\java\com\exemple\model\Livre.java
 C:\RepertoireTravail\springMVC-Exam\src\main\java\com\exemple\repository\BibliothecaireRepository.java
+C:\RepertoireTravail\springMVC-Exam\src\main\java\com\exemple\repository\ProlongementRepository.java
 C:\RepertoireTravail\springMVC-Exam\src\main\java\com\exemple\repository\AdherentRepository.java
 C:\RepertoireTravail\springMVC-Exam\src\main\java\com\exemple\model\Prolongement.java
 C:\RepertoireTravail\springMVC-Exam\src\main\java\com\exemple\controller\ExemplaireController.java
@@ -36,4 +37,5 @@ C:\RepertoireTravail\springMVC-Exam\src\main\java\com\exemple\controller\Inscrip
 C:\RepertoireTravail\springMVC-Exam\src\main\java\com\exemple\model\Penalite.java
 C:\RepertoireTravail\springMVC-Exam\src\main\java\com\exemple\controller\AuthController.java
 C:\RepertoireTravail\springMVC-Exam\src\main\java\com\exemple\model\TypePret.java
+C:\RepertoireTravail\springMVC-Exam\src\main\java\com\exemple\model\StatusExemplaire.java
 C:\RepertoireTravail\springMVC-Exam\src\main\java\com\exemple\service\AbonnementService.java

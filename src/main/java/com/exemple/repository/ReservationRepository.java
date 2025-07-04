@@ -18,4 +18,6 @@ public interface ReservationRepository extends JpaRepository<Reservation, Intege
     
     void deleteByExemplaireAndAdherent(Exemplaire exemplaire, Adherent adherent);
     boolean existsByExemplaire(Exemplaire exemplaire);
+
+    boolean existsByAdherentAndExemplaire(int idAdherent, int idExemplaire);
 }
