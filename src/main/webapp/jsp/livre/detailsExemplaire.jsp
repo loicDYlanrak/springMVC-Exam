@@ -94,7 +94,10 @@
                                 </button>
                             </c:when>
                             <c:when test="${exemplaire.currentStatus.etat.libelle == 'prete'}">
-                                <a href="<c:url value='/livre/retour/${exemplaire.id_exemplaire}'/>" class="btn btn-warning">Retour</a>
+                                <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#retourModal"
+                                        data-exemplaire-id="${exemplaire.id_exemplaire}">
+                                        Retour
+                                    </button>
                                 <a href="<c:url value='/livre/prolonger/${exemplaire.id_exemplaire}'/>" class="btn btn-info">Prolonger</a>
                             </c:when>
                         </c:choose>
@@ -164,7 +167,6 @@
         </div>
     </div>
 
-
     <!-- Modal pour le prêt -->
     <div class="modal fade" id="pretModal" tabindex="-1" aria-labelledby="pretModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -187,10 +189,39 @@
                                 </c:forEach>
                             </select>
                         </div>
+                        <div class="mb-3">
+                            <label for="modalPretDate" class="form-label">Date de prêt</label>
+                            <input type="date" class="form-control" id="modalPretDate" name="date_pret" required>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
                         <button type="submit" class="btn btn-primary">Confirmer le prêt</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal pour le retour -->
+    <div class="modal fade" id="retourModal" tabindex="-1" aria-labelledby="retourModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="retourModalLabel">Retourner un exemplaire</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="<c:url value='/livre/retour'/>" method="post">
+                    <div class="modal-body">
+                        <input type="hidden" name="id_exemplaire" id="modalRetourExemplaireId">
+                        <div class="mb-3">
+                            <label for="modalRetourDate" class="form-label">Date de retour</label>
+                            <input type="date" class="form-control" id="modalRetourDate" name="date_retour" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                        <button type="submit" class="btn btn-primary">Confirmer le retour</button>
                     </div>
                 </form>
             </div>
@@ -255,6 +286,17 @@
                     const exemplaireId = button.getAttribute('data-exemplaire-id');
                     const modal = this;
                     modal.querySelector('#modalReservationExemplaireId').value = exemplaireId;
+                });
+            }
+
+            // Modal pour retour
+            const retourModal = document.getElementById('retourModal');
+            if (retourModal) {
+                retourModal.addEventListener('show.bs.modal', function(event) {
+                    const button = event.relatedTarget;
+                    const exemplaireId = button.getAttribute('data-exemplaire-id');
+                    const modal = this;
+                    modal.querySelector('#modalRetourExemplaireId').value = exemplaireId;
                 });
             }
         });
