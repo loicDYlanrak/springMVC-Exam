@@ -17,6 +17,7 @@ public class LivreService {
     }
 
     public Livre getLivreById(Integer id) {
+    
         return livreRepository.findById(id).orElse(null);
     }
 
