@@ -21,6 +21,8 @@ public class Reservation {
     
     private LocalDateTime date_reservation;
 
+    private Boolean valide; 
+
     public LocalDateTime getDate_reservation() {
         return date_reservation;
     }
@@ -51,6 +53,14 @@ public class Reservation {
 
     public void setAdherent(Adherent adherent) {
         this.adherent = adherent;
+    }
+
+    public Boolean getValide() {
+        return valide;
+    }
+
+    public void setValide(Boolean valide) {
+        this.valide = valide;
     }
     
 }

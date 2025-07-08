@@ -1,6 +1,7 @@
 package com.exemple.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -27,4 +28,9 @@ public interface ReservationRepository extends JpaRepository<Reservation, Intege
 
     @Query("SELECT r FROM Reservation r WHERE r.exemplaire.id_exemplaire = :idExemplaire ORDER BY r.date_reservation DESC")
     List<Reservation> findByExemplaireIdOrderByDateReservationDesc(@Param("idExemplaire") int idExemplaire);
+
+    Optional<Reservation> findById(int idReservation);
+
+    @Query("SELECT r FROM Reservation r WHERE r.exemplaire.id_exemplaire = :idExemplaire ORDER BY r.date_reservation DESC")
+    List<Reservation> findLatestReservationForExemplaire(@Param("idExemplaire") int idExemplaire);
 }

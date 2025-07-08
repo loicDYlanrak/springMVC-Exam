@@ -103,6 +103,9 @@ INSERT INTO EtatExemplaire (libelle) VALUES
 ('disponible'),
 ('prete');
 
+INSERT INTO EtatExemplaire (libelle) VALUES 
+('reserve');
+
 INSERT INTO StatusExemplaire (id_exemplaire, date_changement, id_etat, id_biblio) VALUES
 (1, '2023-01-15', 1, 1),
 (2, '2023-01-15', 1, 1),

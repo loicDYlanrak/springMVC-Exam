@@ -1,17 +1,32 @@
 package com.exemple.controller;
 
-import com.exemple.model.*;
-import com.exemple.service.*;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
+
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import com.exemple.model.Exemplaire;
+import com.exemple.model.Livre;
+import com.exemple.model.Pret;
+import com.exemple.model.Reservation;
+import com.exemple.service.AdherentService;
+import com.exemple.service.ExemplaireService;
+import com.exemple.service.LivreService;
+import com.exemple.service.PretService;
+import com.exemple.service.ReservationService;
 
 @Controller
 @RequestMapping("/livre")
@@ -134,6 +149,50 @@ public class LivreController {
         model.addAttribute("livre", exemplaire.getLivre());
         model.addAttribute("adherents", adherentService.getAllAdherents());
         
+        if (exemplaire.getCurrentStatus() != null 
+            && exemplaire.getCurrentStatus().getEtat() != null
+            && "reserve".equals(exemplaire.getCurrentStatus().getEtat().getLibelle())) {
+            Optional<Reservation> activeReservation = reservationService.getActiveReservationForExemplaire(idExemplaire);
+            activeReservation.ifPresent(res -> model.addAttribute("activeReservation", res));
+        }
+        
         return "livre/detailsExemplaire";
     }
-}
+
+    // Dans LivreController.java
+    @PostMapping("/validerReservation/{idReservation}")
+    public String validerReservation(
+            @PathVariable int idReservation,
+            HttpSession session,
+            Model model) {
+        
+        // Vérifier que l'utilisateur est un bibliothécaire
+        if (session.getAttribute("bibliothecaire") == null) {
+            return "redirect:/login";
+        }
+        
+        String result = reservationService.validerReservation(idReservation);
+        model.addAttribute("message", result);
+        
+        // Rediriger vers la page de détails de l'exemplaire
+        Reservation reservation = reservationService.getReservationById(idReservation);
+        return "redirect:/livre/exemplaire/details/" + reservation.getExemplaire().getId_exemplaire();
+    }
+
+    @PostMapping("/annulerReservation/{idReservation}")
+    public String annulerReservation(
+            @PathVariable int idReservation,
+            HttpSession session,
+            Model model) {
+        
+        if (session.getAttribute("bibliothecaire") == null) {
+            return "redirect:/login";
+        }
+        
+        String result = reservationService.annulerReservation(idReservation);
+        model.addAttribute("message", result);
+        
+        Reservation reservation = reservationService.getReservationById(idReservation);
+        return "redirect:/livre/exemplaire/details/" + reservation.getExemplaire().getId_exemplaire();
+    }
+} 

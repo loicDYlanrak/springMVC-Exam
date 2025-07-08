@@ -1,0 +1,19 @@
+
+ajout de  colonne valider a reservation
+jour feri , ajoute une parametrage pour savoir que lorsque la date de retour est
+un jour non ouvrable ou alors un jour ferie on doit le rendre avant ou apres le jour ?
+
+TEST :
+- pret
+verification a partir de la date de pret 
+
+- retour 
+verification de la date de retour si il correspond a la date de retour prevue calculer
+sinon penalite 
+
+-prologement 
+prologement , si la date de retour est en retard il ne peux pas faire de prologement
+ca doit sse transformer en pret (on stock l id du nouveau pret)
+
+liste adhereent 
+Historier statistique des penalites des adherent

@@ -4,19 +4,14 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.exemple.model.Adherent;
-import com.exemple.model.Exemplaire;
-import com.exemple.model.Reservation;
-import com.exemple.repository.AbonnementRepository;
-import com.exemple.repository.AdherentRepository;
-import com.exemple.repository.ExemplaireRepository;
-import com.exemple.repository.PenaliteRepository;
-import com.exemple.repository.ReservationRepository;
+import com.exemple.model.*;
+import com.exemple.repository.*;
 
 @Service
 public class ReservationService {
@@ -33,6 +28,12 @@ public class ReservationService {
     @Autowired
     private PenaliteRepository penaliteRepository;
 
+        
+    @Autowired
+    private EtatExemplaireRepository etatExemplaireRepository;
+
+        @Autowired
+    private StatusExemplaireRepository statusExemplaireRepository;
         
     @Autowired
     private ReservationRepository reservationRepository;
@@ -76,4 +77,68 @@ public class ReservationService {
         
         return "Réservation effectuée pour le " + dateReservation.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
     }   
+
+    // Dans ReservationService.java
+    public String validerReservation(int idReservation) {
+        try {
+            Reservation reservation = reservationRepository.findById(idReservation)
+                .orElseThrow(() -> new RuntimeException("Réservation non trouvée"));
+            
+            Exemplaire exemplaire = reservation.getExemplaire();
+            
+            // Créer un nouveau statut "réservé"
+            StatusExemplaire newStatus = new StatusExemplaire();
+            newStatus.setExemplaire(exemplaire);
+            newStatus.setDate_changement(LocalDate.now());
+            
+            // Trouver l'état "réservé"
+            EtatExemplaire etatReserve = etatExemplaireRepository.findByLibelle("reserve")
+                .orElseThrow(() -> new RuntimeException("État 'reserve' non trouvé"));
+            
+            newStatus.setEtat(etatReserve);
+            statusExemplaireRepository.save(newStatus);
+            
+            return "Réservation validée avec succès";
+        } catch (Exception e) {
+            return "Erreur lors de la validation de la réservation: " + e.getMessage();
+        }
+    }
+
+    public Reservation getReservationById(int idReservation) {
+        return reservationRepository.findById(idReservation)
+            .orElseThrow(() -> new RuntimeException("Réservation non trouvée avec l'ID: " + idReservation));
+    }
+
+
+    @Transactional
+    public String annulerReservation(int idReservation) {
+        try {
+            Reservation reservation = reservationRepository.findById(idReservation)
+                .orElseThrow(() -> new RuntimeException("Réservation non trouvée"));
+            
+            // Supprimer la réservation
+            reservationRepository.delete(reservation);
+            
+            // Mettre à jour le statut de l'exemplaire
+            Exemplaire exemplaire = reservation.getExemplaire();
+            StatusExemplaire newStatus = new StatusExemplaire();
+            newStatus.setExemplaire(exemplaire);
+            newStatus.setDate_changement(LocalDate.now());
+            
+            EtatExemplaire etatDisponible = etatExemplaireRepository.findByLibelle("disponible")
+                .orElseThrow(() -> new RuntimeException("État 'disponible' non trouvé"));
+            
+            newStatus.setEtat(etatDisponible);
+            statusExemplaireRepository.save(newStatus);
+            
+            return "Réservation annulée avec succès";
+        } catch (Exception e) {
+            return "Erreur lors de l'annulation de la réservation: " + e.getMessage();
+        }
+    }
+
+    public Optional<Reservation> getActiveReservationForExemplaire(int idExemplaire) {
+        List<Reservation> reservations = reservationRepository.findLatestReservationForExemplaire(idExemplaire);
+        return reservations.isEmpty() ? Optional.empty() : Optional.of(reservations.get(0));
+    }
 }

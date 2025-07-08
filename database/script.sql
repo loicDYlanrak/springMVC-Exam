@@ -95,6 +95,7 @@ CREATE TABLE Reservation (
     id_exemplaire INT NOT NULL,
     id_adherent INT NOT NULL,
     date_reservation DATETIME NOT NULL,
+    valide BOOLEAN,
     FOREIGN KEY (id_exemplaire) REFERENCES Exemplaire(id_exemplaire),
     FOREIGN KEY (id_adherent) REFERENCES Adherent(id_adherent)
 );
@@ -114,4 +115,11 @@ CREATE TABLE JourFerie (
 CREATE TABLE JourOuvrable (
     id_jour_ouvrable INT PRIMARY KEY AUTO_INCREMENT,
     jour_semaine INT NOT NULL
+);
+
+CREATE TABLE RegleRetour (
+    id_regle INT PRIMARY KEY AUTO_INCREMENT,
+    description VARCHAR(255) NOT NULL,
+    action ENUM('AVANT', 'APRES', 'PROCHAIN_OUVRABLE') NOT NULL,
+    jours_decallage INT DEFAULT 0
 );

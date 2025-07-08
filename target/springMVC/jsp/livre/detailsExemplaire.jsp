@@ -72,27 +72,44 @@
                         <c:choose>
                             <c:when test="${not empty etat and not empty etat.libelle}">
                                 <span class="badge bg-${etat.libelle == 'disponible' ? 'success' : 'warning'}">
-                                    ${etat.libelle}
+                                    ${exemplaire.currentStatus.etat.libelle}
                                 </span>
+
+                                <c:if test="${etat.libelle == 'reserve' and not empty sessionScope.bibliothecaire and not empty activeReservation}">
+                                    <form action="<c:url value='/livre/annulerReservation/${activeReservation.id_reservation}'/>" method="post" style="display: inline;">
+                                        <button type="submit" class="btn btn-danger btn-sm ms-2">Annuler la réservation</button>
+                                    </form>
+                                </c:if>
                             </c:when>
                             <c:otherwise>
                                 <span class="badge bg-secondary">Statut inconnu</span>
                             </c:otherwise>
                         </c:choose>
+
+
                     </h5>
                 <c:if test="${not empty sessionScope.bibliothecaire}">
                     <div class="actions mt-3">
                         <c:choose>
-                            <c:when test="${exemplaire.currentStatus.etat.libelle == 'disponible'}">
+                            <c:when test="${exemplaire.currentStatus.etat.libelle == 'disponible' || exemplaire.currentStatus.etat.libelle == 'reserve'}">
                                 <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#pretModal"
                                     data-exemplaire-id="${exemplaire.id_exemplaire}">
                                     Prêter
                                 </button>
+                            </c:when>
+                        </c:choose>
+                        <c:choose>
+
+                            <c:when test="${exemplaire.currentStatus.etat.libelle == 'disponible' || exemplaire.currentStatus.etat.libelle == 'prete'}">
+                            
                                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#reservationModal"
                                     data-exemplaire-id="${exemplaire.id_exemplaire}">
                                     Réserver
                                 </button>
                             </c:when>
+                        </c:choose>
+                        <c:choose>
+
                             <c:when test="${exemplaire.currentStatus.etat.libelle == 'prete'}">
                                 <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#retourModal"
                                         data-exemplaire-id="${exemplaire.id_exemplaire}">
@@ -146,6 +163,7 @@
                         <th>ID Réservation</th>
                         <th>Adhérent</th>
                         <th>Date de réservation</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -154,7 +172,16 @@
                             <td>${reservation.id_reservation}</td>
                             <td>${reservation.adherent.nom} (ID: ${reservation.adherent.id_adherent})</td>
                             <td>${reservation.date_reservation}</td>
-
+                            <td>
+                                <c:if test="${not empty sessionScope.bibliothecaire && exemplaire.currentStatus.etat.libelle != 'reserve'}">
+                                    <form action="<c:url value='/livre/validerReservation/${reservation.id_reservation}'/>" method="post" style="display: inline;">
+                                        <button type="submit" class="btn btn-success btn-sm">Valider</button>
+                                    </form>
+                                </c:if>
+                                <c:if test="${exemplaire.currentStatus.etat.libelle == 'reserve'}">
+                                    <span class="badge bg-info">deja Réservé</span>
+                                </c:if>
+                            </td>
                         </tr>
                     </c:forEach>
                     <c:if test="${empty reservations}">
@@ -226,7 +253,7 @@
                 </form>
             </div>
         </div>
-    </div>
+    </div> 
 
     <!-- Modal pour la réservation -->
     <div class="modal fade" id="reservationModal" tabindex="-1" aria-labelledby="reservationModalLabel" aria-hidden="true">

@@ -104,12 +104,15 @@
                                 <c:if test="${not empty sessionScope.bibliothecaire}">
                                     <a href="<c:url value='/livre/exemplaire/details/${exemplaire.id_exemplaire}'/>" class="btn btn-info btn-sm">Voir détails</a>
                                     <c:choose>
-                                        <c:when test="${exemplaire.currentStatus.etat.libelle == 'disponible'}">
+                                      <c:when test="${exemplaire.currentStatus.etat.libelle == 'disponible' || exemplaire.currentStatus.etat.libelle == 'reserve'}">
                                             <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#pretModal"
                                                 data-exemplaire-id="${exemplaire.id_exemplaire}">
                                                 Prêter
                                             </button>
                                         </c:when>
+                                    </c:choose>
+                                    <c:choose>
+                                    
                                         <c:when test="${exemplaire.currentStatus.etat.libelle == 'prete'}">
                                             <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#retourModal"
                                                 data-exemplaire-id="${exemplaire.id_exemplaire}">
@@ -118,10 +121,18 @@
                                             <a href="<c:url value='/livre/prolonger/${exemplaire.id_exemplaire}'/>" class="btn btn-info btn-sm">Prolonger</a>
                                         </c:when>
                                     </c:choose>
-                                    <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#bibliothecaireReservationModal"
-                                        data-exemplaire-id="${exemplaire.id_exemplaire}">
-                                        Réserver
-                                    </button>
+                                    <c:choose>
+                                    
+                                        <c:when test="${exemplaire.currentStatus.etat.libelle == 'disponible' || exemplaire.currentStatus.etat.libelle == 'prete'}">
+                                            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#bibliothecaireReservationModal"
+                                                data-exemplaire-id="${exemplaire.id_exemplaire}">
+                                                Réserver
+                                            </button>    
+                                        </c:when>
+
+                                    </c:choose>
+
+                                   
                                 </c:if>
                             </td>
                         </tr>
