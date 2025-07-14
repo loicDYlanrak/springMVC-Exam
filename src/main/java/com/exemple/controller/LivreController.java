@@ -208,4 +208,15 @@ public class LivreController {
         model.addAttribute("pretsEnCours", pretsEnCours);
         return "livre/manageLoans";
     }
+
+    @GetMapping("/")
+    public String home(
+            @RequestParam(value = "search", required = false) String search,
+            @RequestParam(value = "age_minimum", required = false) Integer ageMinimum,
+            @RequestParam(value = "annee_publication", required = false) Integer anneePublication,
+            Model model) {
+        List<Livre> livres = livreService.filterLivres(search, ageMinimum, anneePublication);
+        model.addAttribute("livres", livres);
+        return "home";
+    }
 }

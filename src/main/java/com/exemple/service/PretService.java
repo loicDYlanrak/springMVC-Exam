@@ -77,6 +77,7 @@ public class PretService {
         return pretRepository.findByExemplaireIdOrderByDatePretDesc(idExemplaire);
     }
 
+    @SuppressWarnings("ConvertToStringSwitch")
     private LocalDate calculateValidReturnDate(LocalDate date) {
         while (true) {
             boolean isOuvrable = jourOuvrableRepository.existsByJourSemaine(date.getDayOfWeek().getValue());

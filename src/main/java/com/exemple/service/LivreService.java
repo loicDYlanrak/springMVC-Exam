@@ -28,4 +28,11 @@ public class LivreService {
     public void deleteLivre(Integer id) {
         livreRepository.deleteById(id);
     }
+
+    public List<Livre> filterLivres(String search, Integer ageMinimum, Integer anneePublication) {
+        if (search == null && ageMinimum == null && anneePublication == null) {
+            return livreRepository.findAll();
+        }
+        return livreRepository.findByFilters(search, ageMinimum, anneePublication);
+    }
 }
