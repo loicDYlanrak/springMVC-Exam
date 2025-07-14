@@ -48,7 +48,6 @@ CREATE TABLE Abonnement (
     date_fin DATE NOT NULL,
     FOREIGN KEY (id_adherent) REFERENCES Adherent(id_adherent)
 );
-
  
 CREATE TABLE EtatExemplaire ( 
     id_etat INT PRIMARY KEY AUTO_INCREMENT,

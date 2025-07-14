@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.servlet.http.HttpSession;
-
+   
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
@@ -99,21 +99,25 @@ public class LivreController {
 
     @PostMapping("/retour")
     public String retournerExemplaire(
-            @RequestParam("id_exemplaire") int idExemplaire,
+            @RequestParam("id_pret") int idPret,
             @RequestParam("date_retour") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dateRetour,
             Model model) {
         
-        String result = pretService.retournerExemplaire(idExemplaire, dateRetour);
+        String result = pretService.retournerExemplaireParPret(idPret, dateRetour);
         model.addAttribute("message", result);
         
         return "redirect:/";
     }
 
-    @GetMapping("/prolonger/{idExemplaire}")
-    public String prolongerPret(@PathVariable int idExemplaire, Model model) {
-        String result = pretService.prolongerPret(idExemplaire);
+    @PostMapping("/prolonger")
+    public String prolongerPret(
+            @RequestParam("id_pret") int idPret,
+            @RequestParam("date_retour") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dateRetour,
+            Model model) {
+        String result = pretService.prolongerPret(idPret, dateRetour);
         model.addAttribute("message", result);
-        return "redirect:/";
+        Pret pret = pretService.getPretById(idPret);
+        return "redirect:/livre/exemplaire/loans/" + pret.getExemplaire().getId_exemplaire();
     }
 
     @PostMapping("/reserver")
@@ -195,4 +199,13 @@ public class LivreController {
         Reservation reservation = reservationService.getReservationById(idReservation);
         return "redirect:/livre/exemplaire/details/" + reservation.getExemplaire().getId_exemplaire();
     }
-} 
+
+    @GetMapping("/exemplaire/loans/{idExemplaire}")
+    public String manageLoans(@PathVariable int idExemplaire, Model model) {
+        Exemplaire exemplaire = exemplaireService.getExemplaireWithInitializedStatus(idExemplaire);
+        List<Pret> pretsEnCours = pretService.getPretsEnCoursByExemplaire(idExemplaire);
+        model.addAttribute("exemplaire", exemplaire);
+        model.addAttribute("pretsEnCours", pretsEnCours);
+        return "livre/manageLoans";
+    }
+}

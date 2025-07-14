@@ -38,4 +38,8 @@ public interface PretRepository extends JpaRepository<Pret, Integer> {
 
     @Query("SELECT p FROM Pret p WHERE p.exemplaire.id_exemplaire = :idExemplaire ORDER BY p.date_pret DESC")
     List<Pret> findByExemplaireIdOrderByDatePretDesc(@Param("idExemplaire") int idExemplaire);
+
+    @Query("SELECT p FROM Pret p WHERE p.exemplaire.id_exemplaire = :idExemplaire AND p.date_retour IS NULL")
+    List<Pret> findPretsEnCoursByExemplaire(@Param("idExemplaire") int idExemplaire);
+
 }

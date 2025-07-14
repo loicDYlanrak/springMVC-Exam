@@ -33,4 +33,9 @@ public interface ReservationRepository extends JpaRepository<Reservation, Intege
 
     @Query("SELECT r FROM Reservation r WHERE r.exemplaire.id_exemplaire = :idExemplaire ORDER BY r.date_reservation DESC")
     List<Reservation> findLatestReservationForExemplaire(@Param("idExemplaire") int idExemplaire);
+
+    @Query("SELECT r FROM Reservation r " +
+           "WHERE (:search IS NULL OR r.adherent.nom LIKE %:search% OR r.exemplaire.livre.titre LIKE %:search%) " +
+           "AND (:filter IS NULL OR (r.valide = TRUE AND :filter = 'valide') OR (r.valide = FALSE AND :filter = 'non_valide'))")
+    List<Reservation> findFilteredReservations(@Param("search") String search, @Param("filter") String filter);
 }

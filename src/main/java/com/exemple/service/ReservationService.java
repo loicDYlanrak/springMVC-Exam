@@ -15,7 +15,7 @@ import com.exemple.repository.*;
 
 @Service
 public class ReservationService {
-    
+     
     @Autowired
     private AdherentRepository adherentRepository;
     
@@ -78,30 +78,24 @@ public class ReservationService {
         return "Réservation effectuée pour le " + dateReservation.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
     }   
 
-    // Dans ReservationService.java
+    public List<Reservation> getFilteredReservations(String search, String filter) {
+        // Implement logic to filter reservations based on search and filter criteria
+        return reservationRepository.findFilteredReservations(search, filter);
+    }
+
+    @Transactional
     public String validerReservation(int idReservation) {
-        try {
-            Reservation reservation = reservationRepository.findById(idReservation)
+        Reservation reservation = reservationRepository.findById(idReservation)
                 .orElseThrow(() -> new RuntimeException("Réservation non trouvée"));
-            
-            Exemplaire exemplaire = reservation.getExemplaire();
-            
-            // Créer un nouveau statut "réservé"
-            StatusExemplaire newStatus = new StatusExemplaire();
-            newStatus.setExemplaire(exemplaire);
-            newStatus.setDate_changement(LocalDate.now());
-            
-            // Trouver l'état "réservé"
-            EtatExemplaire etatReserve = etatExemplaireRepository.findByLibelle("reserve")
-                .orElseThrow(() -> new RuntimeException("État 'reserve' non trouvé"));
-            
-            newStatus.setEtat(etatReserve);
-            statusExemplaireRepository.save(newStatus);
-            
-            return "Réservation validée avec succès";
-        } catch (Exception e) {
-            return "Erreur lors de la validation de la réservation: " + e.getMessage();
+
+        if (reservation.getValide() != null && reservation.getValide()) {
+            return "La réservation est déjà validée.";
         }
+
+        reservation.setValide(true);
+        reservationRepository.save(reservation);
+
+        return "Réservation validée avec succès.";
     }
 
     public Reservation getReservationById(int idReservation) {

@@ -5,32 +5,11 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Bibliothèque - Accueil</title>
+    <title>Réservations en cours</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        .navbar-brand {
-            font-weight: bold;
-        }
-        .search-box {
-            margin: 20px 0;
-        }
-        .book-card {
-            margin-bottom: 20px;
-            height: 100%;
-        }
-        .book-img {
-            height: 200px;
-            object-fit: cover;
-        }
-        .text-title {
-            color: white;
-            text-align: center;
-            padding: 7px;
-        }
-    </style>
 </head>
 <body>
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
             <a class="navbar-brand" href="<c:url value='/'/>">Bibliothèque</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -81,37 +60,62 @@
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     </c:if>
-
     <div class="container mt-4">
-        <div class="search-box">
-            <form action="<c:url value='/'/>" method="get" class="d-flex">
-                <input type="text" name="search" class="form-control me-2" placeholder="Rechercher un livre..." value="${param.search}">
-                <button type="submit" class="btn btn-primary">Rechercher</button>
-            </form>
-        </div>
-
-        <div class="row">
-            <c:forEach items="${livres}" var="livre">
-                <div class="col-md-4 mb-4">
-                    <div class="card book-card">
-                        <div class="card-body">
-                            <h5 class="card-title">${livre.titre}</h5>
-                            <p class="card-text">Auteur: ${livre.auteur}</p>
-                            <p class="card-text">Âge minimum: ${livre.age_minimum} ans</p>
-                            <c:if test="${not empty livre.annee_publication}">
-                                <p class="card-text">Année: ${livre.annee_publication}</p>
-                            </c:if>
-                        </div>
-                        <div class="card-footer">
-                            <a href="<c:url value='/livre/exemplaires/${livre.id_livre}'/>" class="btn btn-primary">Voir les exemplaires</a>
-                            
-                        </div>
-                    </div>
+        <h2>Réservations en cours</h2>
+        <form method="get" action="<c:url value='/reservations'/>" class="mb-3">
+            <div class="row">
+                <div class="col-md-4">
+                    <input type="text" name="search" class="form-control" placeholder="Rechercher par adhérent ou livre">
                 </div>
-            </c:forEach>
-        </div>
+                <div class="col-md-4">
+                    <select name="filter" class="form-select">
+                        <option value="">-- Filtrer par état --</option>
+                        <option value="valide">Validé</option>
+                        <option value="non_valide">Non validé</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <button type="submit" class="btn btn-primary">Rechercher</button>
+                </div>
+            </div>
+        </form>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Adhérent</th>
+                    <th>Livre</th>
+                    <th>Date de réservation</th>
+                    <th>État</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <c:forEach items="${reservations}" var="reservation">
+                    <tr>
+                        <td>${reservation.adherent.nom}</td>
+                        <td>${reservation.exemplaire.livre.titre}</td>
+                        <td>${reservation.date_reservation}</td>
+                        <td>
+                            <c:choose>
+                                <c:when test="${reservation.valide}">
+                                    Validé
+                                </c:when>
+                                <c:otherwise>
+                                    Non validé
+                                </c:otherwise>
+                            </c:choose>
+                        </td>
+                        <td>
+                            <c:if test="${!reservation.valide}">
+                                <form action="<c:url value='/reservations/valider/${reservation.id_reservation}'/>" method="post" style="display:inline;">
+                                    <button type="submit" class="btn btn-success btn-sm">Valider</button>
+                                </form>
+                            </c:if>
+                        </td>
+                    </tr>
+                </c:forEach>
+            </tbody>
+        </table>
     </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

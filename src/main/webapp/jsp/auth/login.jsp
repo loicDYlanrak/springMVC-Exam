@@ -34,7 +34,7 @@
                         </ul>
                         
                         <div class="tab-content mt-3" id="loginTabsContent">
-                            <div class="tab-pane fade show active" id="adherent" role="tabpanel">
+                            <div class="tab-pane fade" id="adherent" role="tabpanel">
                                 <form action="<c:url value='/login/adherent'/>" method="post">
                                     <div class="mb-3">
                                         <label for="email" class="form-label">Email</label>
@@ -48,7 +48,7 @@
                                 </form>
                             </div>
                             
-                            <div class="tab-pane fade" id="bibliothecaire" role="tabpanel">
+                            <div class="tab-pane fade  show active" id="bibliothecaire" role="tabpanel">
                                 <form action="<c:url value='/login/bibliothecaire'/>" method="post">
                                     <div class="mb-3">
                                         <label for="nom" class="form-label">Nom</label>
