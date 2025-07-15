@@ -18,7 +18,7 @@
                 }
 
                 .table-container {
-                    margin-top: 30px;
+                    margin-top: 30px; 
                 }
             </style>
         </head>
@@ -127,20 +127,24 @@
                                     <td>${reservation.date_reservation}</td>
                                     <td>
                                         <c:choose>
-                                            <c:when test="${reservation.valide}">
-                                                Validé
+                                            <c:when test="${reservation.valide == null}">
+                                                En attente de validation
+                                            </c:when>
+                                            <c:when test="${reservation.valide == false}">
+                                                Refusée
                                             </c:when>
                                             <c:otherwise>
-                                                Non validé
+                                                Validé
                                             </c:otherwise>
                                         </c:choose>
                                     </td>
                                     <td>
-                                        <c:if test="${!reservation.valide}">
-                                            <form
-                                                action="<c:url value='/reservations/valider/${reservation.id_reservation}'/>"
-                                                method="post" style="display:inline;">
+                                        <c:if test="${reservation.valide == null}">
+                                            <form action="<c:url value='/reservations/valider/${reservation.id_reservation}'/>" method="post" style="display:inline;">
                                                 <button type="submit" class="btn btn-success btn-sm">Valider</button>
+                                            </form>
+                                            <form action="<c:url value='/reservations/refuser/${reservation.id_reservation}'/>" method="post" style="display:inline; margin-left:5px;">
+                                                <button type="submit" class="btn btn-danger btn-sm">Refuser</button>
                                             </form>
                                         </c:if>
                                     </td>
@@ -255,11 +259,7 @@
                                 <button type="submit" class="btn btn-primary">Confirmer le prêt</button>
                             </div>
                         </form>
-                    </div>
-                </div>
-            </div>
-
-            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+                   
             <script>
                 document.addEventListener('DOMContentLoaded', function () {
                     const reservationModal = document.getElementById('reservationModal');

@@ -94,7 +94,7 @@ CREATE TABLE Reservation (
     id_exemplaire INT NOT NULL,
     id_adherent INT NOT NULL,
     date_reservation DATETIME NOT NULL,
-    valide BOOLEAN,
+    valide BOOLEAN DEFAULT NULL,
     FOREIGN KEY (id_exemplaire) REFERENCES Exemplaire(id_exemplaire),
     FOREIGN KEY (id_adherent) REFERENCES Adherent(id_adherent)
 );

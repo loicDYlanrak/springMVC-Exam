@@ -67,6 +67,11 @@ public class ReservationService {
         if (LocalDate.now().getYear() - adherent.getDateNaissance().getYear() < exemplaire.getLivre().getAge_minimum()) {
             return "L'âge de l'adhérent ne correspond pas à l'âge minimum requis";
         }
+        // Vérifier le nombre maximum de réservations autorisées pour cet adhérent
+        long currentReservations = reservationRepository.countByAdherentAndValideIsNull(adherent);
+        if (currentReservations >= adherent.getTypeAdherent().getNb_reservation_max()) {
+            return "Nombre maximum de réservations atteint";
+        }
         
         // Création réservation
         Reservation reservation = new Reservation();
@@ -134,5 +139,17 @@ public class ReservationService {
     public Optional<Reservation> getActiveReservationForExemplaire(int idExemplaire) {
         List<Reservation> reservations = reservationRepository.findLatestReservationForExemplaire(idExemplaire);
         return reservations.isEmpty() ? Optional.empty() : Optional.of(reservations.get(0));
+    }
+
+    @Transactional
+    public String refuserReservation(int idReservation) {
+        Reservation reservation = reservationRepository.findById(idReservation)
+                .orElseThrow(() -> new RuntimeException("Réservation non trouvée"));
+        if (reservation.getValide() != null) {
+            return "La réservation a déjà été traitée.";
+        }
+        reservation.setValide(false);
+        reservationRepository.save(reservation);
+        return "Réservation refusée avec succès.";
     }
 }

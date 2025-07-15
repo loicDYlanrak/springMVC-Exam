@@ -25,5 +25,11 @@ public class ReservationController {
     public String validerReservation(@PathVariable int idReservation) {
         String message=reservationService.validerReservation(idReservation);
         return "redirect:/reservations?message=" + message;
+    } 
+    
+    @PostMapping("/refuser/{idReservation}")
+    public String refuserReservation(@PathVariable int idReservation) {
+        String message = reservationService.refuserReservation(idReservation);
+        return "redirect:/reservations?message=" + message;
     }
 }

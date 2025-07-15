@@ -38,4 +38,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Intege
            "WHERE (:search IS NULL OR r.adherent.nom LIKE %:search% OR r.exemplaire.livre.titre LIKE %:search%) " +
            "AND (:filter IS NULL OR (r.valide = TRUE AND :filter = 'valide') OR (r.valide = FALSE AND :filter = 'non_valide'))")
     List<Reservation> findFilteredReservations(@Param("search") String search, @Param("filter") String filter);
+
+    @Query("SELECT COUNT(r) FROM Reservation r WHERE r.adherent = :adherent AND r.valide IS NULL")
+    long countByAdherentAndValideIsNull(@Param("adherent") Adherent adherent);
 }
