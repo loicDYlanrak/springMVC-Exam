@@ -6,9 +6,10 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.servlet.http.HttpSession;
-   
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,23 +32,22 @@ import com.exemple.service.ReservationService;
 @Controller
 @RequestMapping("/livre")
 public class LivreController {
-    
+
     @Autowired
     private LivreService livreService;
-    
-    @Autowired 
+
+    @Autowired
     private PretService pretService;
-        
+
     @Autowired
     private AdherentService adherentService;
 
     @Autowired
     private ExemplaireService exemplaireService;
 
-
     @Autowired
     private ReservationService reservationService;
-    
+
     @GetMapping
     public String listLivres(Model model) {
         model.addAttribute("livres", livreService.getAllLivres());
@@ -90,10 +90,10 @@ public class LivreController {
             @RequestParam("id_adherent") int idAdherent,
             @RequestParam("date_pret") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate datePret,
             Model model) {
-        
+
         String result = pretService.emprunterExemplaire(idExemplaire, idAdherent, datePret);
         model.addAttribute("message", result);
-        
+
         return "redirect:/";
     }
 
@@ -102,10 +102,10 @@ public class LivreController {
             @RequestParam("id_pret") int idPret,
             @RequestParam("date_retour") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dateRetour,
             Model model) {
-        
+
         String result = pretService.retournerExemplaireParPret(idPret, dateRetour);
         model.addAttribute("message", result);
-        
+
         return "redirect:/";
     }
 
@@ -126,7 +126,7 @@ public class LivreController {
             @RequestParam("id_adherent") int idAdherent,
             @RequestParam("date_reservation") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") LocalDateTime dateReservation,
             Model model) {
-        
+
         String result = reservationService.reserverExemplaire(idExemplaire, idAdherent, dateReservation);
         model.addAttribute("message", result);
         return "redirect:/";
@@ -146,20 +146,21 @@ public class LivreController {
         Exemplaire exemplaire = exemplaireService.getExemplaireWithInitializedStatus(idExemplaire);
         List<Pret> historiquePrets = pretService.getHistoriquePretsByExemplaire(idExemplaire);
         List<Reservation> reservations = reservationService.getReservationsByExemplaire(idExemplaire);
-        
+
         model.addAttribute("exemplaire", exemplaire);
         model.addAttribute("historiquePrets", historiquePrets);
         model.addAttribute("reservations", reservations);
         model.addAttribute("livre", exemplaire.getLivre());
         model.addAttribute("adherents", adherentService.getAllAdherents());
-        
-        if (exemplaire.getCurrentStatus() != null 
-            && exemplaire.getCurrentStatus().getEtat() != null
-            && "reserve".equals(exemplaire.getCurrentStatus().getEtat().getLibelle())) {
-            Optional<Reservation> activeReservation = reservationService.getActiveReservationForExemplaire(idExemplaire);
+
+        if (exemplaire.getCurrentStatus() != null
+                && exemplaire.getCurrentStatus().getEtat() != null
+                && "reserve".equals(exemplaire.getCurrentStatus().getEtat().getLibelle())) {
+            Optional<Reservation> activeReservation = reservationService
+                    .getActiveReservationForExemplaire(idExemplaire);
             activeReservation.ifPresent(res -> model.addAttribute("activeReservation", res));
         }
-        
+
         return "livre/detailsExemplaire";
     }
 
@@ -169,15 +170,15 @@ public class LivreController {
             @PathVariable int idReservation,
             HttpSession session,
             Model model) {
-        
+
         // Vérifier que l'utilisateur est un bibliothécaire
         if (session.getAttribute("bibliothecaire") == null) {
             return "redirect:/login";
         }
-        
+
         String result = reservationService.validerReservation(idReservation);
         model.addAttribute("message", result);
-        
+
         // Rediriger vers la page de détails de l'exemplaire
         Reservation reservation = reservationService.getReservationById(idReservation);
         return "redirect:/livre/exemplaire/details/" + reservation.getExemplaire().getId_exemplaire();
@@ -188,14 +189,14 @@ public class LivreController {
             @PathVariable int idReservation,
             HttpSession session,
             Model model) {
-        
+
         if (session.getAttribute("bibliothecaire") == null) {
             return "redirect:/login";
         }
-        
+
         String result = reservationService.annulerReservation(idReservation);
         model.addAttribute("message", result);
-        
+
         Reservation reservation = reservationService.getReservationById(idReservation);
         return "redirect:/livre/exemplaire/details/" + reservation.getExemplaire().getId_exemplaire();
     }

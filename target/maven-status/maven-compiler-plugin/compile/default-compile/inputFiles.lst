@@ -11,6 +11,7 @@ C:\RepertoireTravail\springMVC-Exam\src\main\java\com\exemple\service\EtatExempl
 C:\RepertoireTravail\springMVC-Exam\src\main\java\com\exemple\repository\AbonnementRepository.java
 C:\RepertoireTravail\springMVC-Exam\src\main\java\com\exemple\repository\PenaliteRepository.java
 C:\RepertoireTravail\springMVC-Exam\src\main\java\com\exemple\repository\TypeAdherentRepository.java
+C:\RepertoireTravail\springMVC-Exam\src\main\java\com\exemple\config\WebConfig.java
 C:\RepertoireTravail\springMVC-Exam\src\main\java\com\exemple\repository\LivreRepository.java
 C:\RepertoireTravail\springMVC-Exam\src\main\java\com\exemple\model\EtatExemplaire.java
 C:\RepertoireTravail\springMVC-Exam\src\main\java\com\exemple\model\Pret.java
@@ -36,6 +37,7 @@ C:\RepertoireTravail\springMVC-Exam\src\main\java\com\exemple\service\PretServic
 C:\RepertoireTravail\springMVC-Exam\src\main\java\com\exemple\repository\JourOuvrableRepository.java
 C:\RepertoireTravail\springMVC-Exam\src\main\java\com\exemple\service\TypeAdherentService.java
 C:\RepertoireTravail\springMVC-Exam\src\main\java\com\exemple\model\Reservation.java
+C:\RepertoireTravail\springMVC-Exam\src\main\java\com\exemple\controller\LivreApiController.java
 C:\RepertoireTravail\springMVC-Exam\src\main\java\com\exemple\service\BibliothecaireService.java
 C:\RepertoireTravail\springMVC-Exam\src\main\java\com\exemple\repository\JourFerieRepository.java
 C:\RepertoireTravail\springMVC-Exam\src\main\java\com\exemple\repository\ReservationRepository.java

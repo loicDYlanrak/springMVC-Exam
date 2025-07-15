@@ -1,10 +1,12 @@
 com\exemple\controller\PenaliteController.class
 com\exemple\model\Exemplaire.class
 com\exemple\model\JourFerie.class
+com\exemple\config\WebConfig.class
 com\exemple\model\Pret.class
 com\exemple\controller\ExemplaireController.class
 com\exemple\service\AbonnementService.class
 com\exemple\repository\JourFerieRepository.class
+com\exemple\controller\LivreApiController.class
 com\exemple\controller\ReservationController.class
 com\exemple\repository\LivreRepository.class
 com\exemple\service\ExemplaireService.class
