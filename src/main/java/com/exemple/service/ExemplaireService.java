@@ -47,4 +47,11 @@ public class ExemplaireService {
     public List<Exemplaire> getExemplairesByLivreId(Integer livreId) {
         return exemplaireRepository.findByLivreId(livreId); // This will now use the EntityGraph
     }
+
+    public List<Exemplaire> searchExemplaires(String search) {
+        if (search == null || search.isEmpty()) {
+            return exemplaireRepository.findAll();
+        }
+        return exemplaireRepository.findByLivreTitreContainingIgnoreCaseOrLivreAuteurContainingIgnoreCase(search, search);
+    }
 }

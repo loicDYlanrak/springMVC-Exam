@@ -21,8 +21,11 @@ public class ExemplaireController {
     private LivreService livreService;
 
     @GetMapping
-    public String listExemplaires(Model model) {
-        model.addAttribute("exemplaires", exemplaireService.getAllExemplaires());
+    public String listExemplaires(
+            @RequestParam(value = "search", required = false) String search,
+            Model model) {
+        List<Exemplaire> exemplaires = exemplaireService.searchExemplaires(search);
+        model.addAttribute("exemplaires", exemplaires);
         return "exemplaire/list";
     }
 

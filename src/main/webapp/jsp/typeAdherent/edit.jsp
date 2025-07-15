@@ -3,7 +3,7 @@
 
 <c:set var="title" value="Modifier un Type d'Adhérent" scope="request" />
 <c:set var="content" value="typeAdherent/edit-content" scope="request" />
-<jsp:include page="/jsp/template.jsp" />
+<jsp:include page="/jsp/layout/template.jsp" />
 
 <c:remove var="content" />
 <c:remove var="title" />

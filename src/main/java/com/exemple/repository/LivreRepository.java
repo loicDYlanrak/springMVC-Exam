@@ -17,4 +17,6 @@ public interface LivreRepository extends JpaRepository<Livre, Integer> {
     List<Livre> findByFilters(@Param("search") String search,
                               @Param("ageMinimum") Integer ageMinimum,
                               @Param("anneePublication") Integer anneePublication);
+
+    List<Livre> findByTitreContainingIgnoreCaseOrAuteurContainingIgnoreCase(String titre, String auteur);
 }

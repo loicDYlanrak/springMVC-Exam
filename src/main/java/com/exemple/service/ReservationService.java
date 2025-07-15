@@ -53,7 +53,7 @@ public class ReservationService {
             // Vérification adhérent actif
         if (abonnementRepository.findActiveByAdherent(idAdherent, LocalDate.now()).isEmpty()) {
             return "Adhésion expirée";
-        }
+        } 
         
         // Vérification pénalités
         if (!penaliteRepository.findActivePenalitesByAdherent(idAdherent).isEmpty()) {

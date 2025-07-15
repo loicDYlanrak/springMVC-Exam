@@ -24,7 +24,10 @@ public interface ExemplaireRepository extends JpaRepository<Exemplaire, Integer>
     Optional<Exemplaire> findByIdWithFullDetails(@Param("id") int id);
 
     @SuppressWarnings("null")
-    @EntityGraph(attributePaths = {"statusExemplaires", "statusExemplaires.etat"})
+    @EntityGraph(attributePaths = {"statusExemplaires", "statusExemplaires.etat", "livre"})
     @Override
     List<Exemplaire> findAll();
+
+    @EntityGraph(attributePaths = {"statusExemplaires", "statusExemplaires.etat", "livre"})
+    List<Exemplaire> findByLivreTitreContainingIgnoreCaseOrLivreAuteurContainingIgnoreCase(String titre, String auteur);
 }

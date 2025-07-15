@@ -3,7 +3,7 @@
 
 <c:set var="title" value="Liste des Bibliothécaires" scope="request" />
 <c:set var="content" value="bibliothecaire/list-content" scope="request" />
-<jsp:include page="/jsp/template.jsp" />
+<jsp:include page="/jsp/layout/template.jsp" />
 
 <c:remove var="content" />
 <c:remove var="title" />

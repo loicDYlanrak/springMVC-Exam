@@ -3,7 +3,7 @@
 
 <c:set var="title" value="Modifier un Bibliothécaire" scope="request" />
 <c:set var="content" value="bibliothecaire/edit-content" scope="request" />
-<jsp:include page="/jsp/template.jsp" />
+<jsp:include page="/jsp/layout/template.jsp" />
 
 <c:remove var="content" />
 <c:remove var="title" />

@@ -219,4 +219,13 @@ public class LivreController {
         model.addAttribute("livres", livres);
         return "home";
     }
+
+    @GetMapping("/livres")
+    public String listLivres(
+            @RequestParam(value = "search", required = false) String search,
+            Model model) {
+        List<Livre> livres = livreService.searchLivres(search);
+        model.addAttribute("livres", livres);
+        return "livre/list";
+    }
 }

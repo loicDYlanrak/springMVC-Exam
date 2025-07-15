@@ -35,4 +35,11 @@ public class LivreService {
         }
         return livreRepository.findByFilters(search, ageMinimum, anneePublication);
     }
+
+    public List<Livre> searchLivres(String search) {
+        if (search == null || search.isEmpty()) {
+            return livreRepository.findAll();
+        }
+        return livreRepository.findByTitreContainingIgnoreCaseOrAuteurContainingIgnoreCase(search, search);
+    }
 }
